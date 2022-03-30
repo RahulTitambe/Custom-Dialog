@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private class btnEditListner implements View.OnClickListener{
         @Override
         public void onClick(View view) {
-            editDialog = new edttxtpopup(MainActivity.this, edtInput.getText().toString());
+            editDialog = new edttxtpopup(MainActivity.this, edtInput.getText().toString(),new DoneActions());
             editDialog.setOnDoneListner(new DoneActions());
             editDialog.show();
             Log.e("Crash","ShowMethod");
@@ -43,7 +43,9 @@ public class MainActivity extends AppCompatActivity {
 
     class DoneActions implements edttxtpopup.OnDoneListner{
         @Override
-        public void onDone(edttxtpopup EdtPopup) {
+        public void onDoneListner(edttxtpopup EdtPopup, String strEditedInput) {
+
+            edtInput.setText(strEditedInput+"");
             editDialog.dismiss();
         }
     }

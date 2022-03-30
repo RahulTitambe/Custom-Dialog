@@ -20,11 +20,10 @@ class edttxtpopup extends Dialog {
     private CheckBox chbxReverseText;
     private Button btnDone;
     private Context context;
-    private String Input;
-
+    private String strInput;
 
     public interface OnDoneListner{
-        void onDone(edttxtpopup EdtPopup);
+        void onDoneListner(edttxtpopup EdtPopup, String strEditedInput);
     }
 
     private OnDoneListner onDoneListner = null;
@@ -32,14 +31,14 @@ class edttxtpopup extends Dialog {
         this.onDoneListner = onDoneListner;
     }
 
-    edttxtpopup(Context context, String input){
+
+    edttxtpopup(Context context, String input,OnDoneListner onDoneListner){
     super(context);
     this.context = context;
     setContentView(R.layout.activity_edttxt_popup);
+    this.onDoneListner = onDoneListner;
 
     init();
-
-    this.Input=input;
 
         txtEditDialog.setText(input);
 
@@ -47,15 +46,18 @@ class edttxtpopup extends Dialog {
         rdBtnLowercase.setOnClickListener(new RdBtnLowercaseListner());
         rdBtnInitCap.setOnClickListener(new RdBtnInitcapListner());
         btnDone.setOnClickListener(new BtnDoneListner());
+        chbxReverseText.setOnClickListener(new chbxOnCheckBoxChecked());
 
     }
 
     private class RdBtnUppercaseListner implements View.OnClickListener {
         @Override
         public void onClick(View view) {
+            String textViewText = txtEditDialog.getText().toString();
             if (rdBtnUppercase.isChecked()) {
                 rdBtnLowercase.setChecked(false);
                 rdBtnInitCap.setChecked(false);
+                txtEditDialog.setAllCaps(true);
 
             }
         }
@@ -64,10 +66,11 @@ class edttxtpopup extends Dialog {
     private class RdBtnLowercaseListner implements View.OnClickListener {
         @Override
         public void onClick(View view) {
+            String textViewText = txtEditDialog.getText().toString();
             if (rdBtnLowercase.isChecked()) {
                 rdBtnUppercase.setChecked(false);
                 rdBtnInitCap.setChecked(false);
-
+                txtEditDialog.setText(textViewText.toLowerCase(Locale.ROOT));
             }
         }
     }
@@ -75,27 +78,10 @@ class edttxtpopup extends Dialog {
     private class RdBtnInitcapListner implements View.OnClickListener {
         @Override
         public void onClick(View view) {
+            String textViewText = txtEditDialog.getText().toString();
             if (rdBtnInitCap.isChecked()) {
                 rdBtnLowercase.setChecked(false);
                 rdBtnUppercase.setChecked(false);
-            }
-        }
-    }
-
-    private class BtnDoneListner implements View.OnClickListener{
-        @Override
-        public void onClick(View view) {
-
-            String textViewText = txtEditDialog.getText().toString();
-            if (rdBtnUppercase.isChecked()){
-                txtEditDialog.setAllCaps(true);
-            }
-
-            else if (rdBtnLowercase.isChecked()){
-                txtEditDialog.setText(textViewText.toLowerCase(Locale.ROOT));
-            }
-
-            else if (rdBtnInitCap.isChecked()){
                 String str;
                 String[] strArray = txtEditDialog.getText().toString().split(" ");
                 StringBuilder builder = new StringBuilder();
@@ -105,12 +91,23 @@ class edttxtpopup extends Dialog {
                 }
                 txtEditDialog.setText(builder.toString());
             }
-            if(chbxReverseText.isChecked()){
-                StringBuffer stringBuffer = new StringBuffer(textViewText);
-                txtEditDialog.setText(stringBuffer.reverse());
+        }
+    }
 
-            }
-            onDoneListner.onDone(edttxtpopup.this);
+    private class chbxOnCheckBoxChecked implements View.OnClickListener{
+        @Override
+        public void onClick(View view) {
+            String textViewText = txtEditDialog.getText().toString();
+            StringBuffer stringBuffer = new StringBuffer(textViewText);
+            txtEditDialog.setText(stringBuffer.reverse());
+        }
+    }
+
+    private class BtnDoneListner implements View.OnClickListener{
+        @Override
+        public void onClick(View view) {
+                onDoneListner.onDoneListner(edttxtpopup.this, txtEditDialog.getText().toString());
+
         }
     }
 
