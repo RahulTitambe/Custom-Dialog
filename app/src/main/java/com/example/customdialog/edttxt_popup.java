@@ -57,7 +57,9 @@ class edttxtpopup extends Dialog {
             if (rdBtnUppercase.isChecked()) {
                 rdBtnLowercase.setChecked(false);
                 rdBtnInitCap.setChecked(false);
-                txtEditDialog.setAllCaps(true);
+                strInput=txtEditDialog.getText().toString();
+                strInput.toUpperCase();
+                txtEditDialog.setText(strInput+"");
 
             }
         }
@@ -82,7 +84,6 @@ class edttxtpopup extends Dialog {
             if (rdBtnInitCap.isChecked()) {
                 rdBtnLowercase.setChecked(false);
                 rdBtnUppercase.setChecked(false);
-                String str;
                 String[] strArray = txtEditDialog.getText().toString().split(" ");
                 StringBuilder builder = new StringBuilder();
                 for (String s : strArray) {
